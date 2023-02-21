@@ -1,24 +1,13 @@
-import { useParams } from "react-router-dom";
-import { getCountry } from "../../services/api.repo";
-import { useContext, useEffect, useState } from "react";
+import { useContext } from "react";
 import { AppContext } from "../../context/app.context";
+import { useDetails } from "../../hooks/use.details";
 
 export function Details() {
-  const { id } = useParams();
+  const { selectedCountry } = useContext(AppContext);
 
-  const { countries } = useContext(AppContext);
-  const [country, setCountry] = useState<{ [key: string]: any }>();
+  const { country, contextCountry } = useDetails();
 
-  const contextCountry = countries.find((item) => item.name === id);
-
-  useEffect(() => {
-    const loadCountry = async () => {
-      const country = await getCountry(id as string);
-      console.log(country);
-      setCountry(country);
-    };
-    loadCountry();
-  }, [id]);
+  console.log(selectedCountry);
 
   if (country === undefined) {
     return <>🌀 Loading</>;
@@ -26,7 +15,7 @@ export function Details() {
 
   return (
     <>
-      <h2>Details from {id}</h2>
+      <h2>Details from {contextCountry?.name}</h2>
       <p>Capital: {contextCountry?.capital}</p>
       <p>Población: {contextCountry?.population}</p>
       <p>Area: {contextCountry?.area}</p>
